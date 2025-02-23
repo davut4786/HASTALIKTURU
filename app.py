@@ -1,15 +1,27 @@
 import streamlit as st
 import pickle
 import pandas as pd
+import os
 
 # --------------------------
 # Dosyaları Yükle
 # --------------------------
-with open("minmax_scaler.pkl", "rb") as f:
-    scaler = pickle.load(f)
+model_path = "model.pkl"  # Yeni model dosyasının adı
 
-with open("xgb_model.pkl", "rb") as f:
-    model = pickle.load(f)
+# Model dosyasının mevcut olup olmadığını kontrol et
+if not os.path.exists(model_path):
+    st.error("Model dosyası bulunamadı. Lütfen doğru dosya yolunu kontrol edin.")
+else:
+    with open(model_path, "rb") as f:
+        model = pickle.load(f)
+
+# MinMaxScaler dosyasını yükleyin (Bu adımı da kontrol edelim)
+scaler_path = "minmax_scaler.pkl"  # MinMaxScaler dosyasının adı
+if not os.path.exists(scaler_path):
+    st.error("Scaler dosyası bulunamadı. Lütfen doğru dosya yolunu kontrol edin.")
+else:
+    with open(scaler_path, "rb") as f:
+        scaler = pickle.load(f)
 
 # --------------------------
 # Uygulama Başlığı
