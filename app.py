@@ -25,7 +25,9 @@ columns = [
     "MPV", "PLT", "RBC", "RDW", "WBC"
 ]
 
+# --------------------------
 # Session state başlangıç değerleri
+# --------------------------
 if 'numeric_inputs' not in st.session_state:
     st.session_state.numeric_inputs = {col: None for col in columns}
 
