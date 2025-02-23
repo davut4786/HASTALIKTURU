@@ -8,7 +8,7 @@ import pandas as pd
 with open("scaler.pkl", "rb") as f:
     scaler = pickle.load(f)
 
-with open("xgb_model.pkl", "rb") as f:  # model dosya ismi xgb_modell.pkl yerine doğru olan xgb_model.pkl
+with open("xgb_modell.pkl", "rb") as f:  # model dosya ismi xgb_modell.pkl yerine doğru olan xgb_model.pkl
     model = pickle.load(f)
 
 # --------------------------
