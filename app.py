@@ -8,7 +8,7 @@ import pandas as pd
 with open("scaler.pkl", "rb") as f:
     scaler = pickle.load(f)
 
-with open("xgb_modell.pkl", "rb") as f:
+with open("xgb_model.pkl", "rb") as f:  # model dosya ismi xgb_modell.pkl yerine doğru olan xgb_model.pkl
     model = pickle.load(f)
 
 # --------------------------
@@ -46,6 +46,7 @@ st.markdown("**Laboratuvar Sonuçları**")
 cols = st.columns(6)
 col_index = 0
 
+# Sayısal girdileri dinamik olarak ekliyoruz
 for i, col in enumerate(numeric_columns):
     current_col = cols[col_index]
     st.session_state.numeric_inputs[col] = current_col.number_input(
@@ -64,6 +65,7 @@ animal_type = st.radio("Hayvan Türü Seçiniz",
                        options=["Kedi", "Köpek"],
                        horizontal=True)
 
+# Kategorik input'u güncelleme
 st.session_state.categorical_inputs = {
     'hayvan_turu_kedi': 1 if animal_type == "Kedi" else 0,
     'hayvan_turu_kopek': 1 if animal_type == "Köpek" else 0
@@ -85,23 +87,23 @@ if st.button("Tahmin Et", type="primary"):
         st.error(f"Eksik değerler bulundu: {', '.join(missing_values)}")
     else:
         try:
-            # Ölçeklendirme
+            # Sayısal verileri ölçeklendirme
             scaled_data = scaler.transform(input_data[numeric_columns])
             input_data[numeric_columns] = scaled_data
             
-            # Tahmin
+            # Modelle tahmin yapma
             prediction = model.predict(input_data)[0]
             
             # Sonuçları eşleştirme
             disease_mapping = {
                 0: "Enfeksiyöz",
-                1: "Metablik",
+                1: "Metabolik",
                 2: "Sağlıklı"
             }
             
             result = disease_mapping.get(prediction, "Bilinmeyen Durum")
             
-            # Sonuç gösterimi
+            # Tahmin sonucunu gösterme
             st.success(f"Tahmini Sonuç: {result}")
             st.write("Detaylar:")
             st.dataframe(input_data.T.style.highlight_max(axis=0))
