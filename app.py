@@ -114,20 +114,8 @@ if st.button("Tahmin Et", type="primary"):
 
             # Tahmin sonucunu gösterme
             st.success(f"Tahmini Sonuç: {result}")
+            st.write("Detaylar:")
+            st.dataframe(input_data.T.style.highlight_max(axis=0))
 
         except Exception as e:
             st.error(f"Hata oluştu: {str(e)}")
-
-# --------------------------
-# Temizle Butonu ve İşlemleri
-# --------------------------
-if st.button("Temizle", type="secondary"):
-    # Kullanıcı girdiği verileri sıfırlasın
-    st.session_state.numeric_inputs = {col: None for col in numeric_columns}
-    st.session_state.categorical_inputs = {
-        'hayvan_turu_kedi': 0,
-        'hayvan_turu_kopek': 0
-    }
-    
-    # Temizleme işlemi sonrası, kullanıcıya bilgilendirme mesajı ver
-    st.success("Veriler temizlendi. Yeni veri girişi yapabilirsiniz.")
