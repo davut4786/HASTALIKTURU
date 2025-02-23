@@ -75,38 +75,47 @@ st.session_state.categorical_inputs = {
 # Tahmin Butonu ve İşlemleri
 # --------------------------
 if st.button("Tahmin Et", type="primary"):
-    # Veri birleştirme
+    # Girdi verisini oluşturma
     input_data = pd.DataFrame([{
         **st.session_state.numeric_inputs,
         **st.session_state.categorical_inputs
     }])
-    
+
+    # Kategorik verileri olduğu gibi bırak
+    categorical_data = input_data[['hayvan_turu_kedi', 'hayvan_turu_kopek']]
+
+    # Sayısal verileri ölçeklendir
+    numeric_data = input_data[numeric_columns]
+    scaled_data = scaler.transform(numeric_data)
+
+    # Ölçeklenmiş sayısal verileri geri yerleştir
+    input_data[numeric_columns] = scaled_data
+
+    # Kategorik verileri ölçeklenmiş sayısal verilerle birleştir
+    input_data = pd.concat([categorical_data, input_data[numeric_columns]], axis=1)
+
     # Eksik veri kontrolü
     missing_values = input_data.columns[input_data.isnull().any()].tolist()
     if missing_values:
         st.error(f"Eksik değerler bulundu: {', '.join(missing_values)}")
     else:
         try:
-            # Sayısal verileri ölçeklendirme
-            scaled_data = scaler.transform(input_data[numeric_columns])
-            input_data[numeric_columns] = scaled_data
-            
-            # Modelle tahmin yapma
+            # Model ile tahmin yapma
             prediction = model.predict(input_data)[0]
-            
+
             # Sonuçları eşleştirme
             disease_mapping = {
                 0: "Enfeksiyöz",
                 1: "Metabolik",
                 2: "Sağlıklı"
             }
-            
+
             result = disease_mapping.get(prediction, "Bilinmeyen Durum")
-            
+
             # Tahmin sonucunu gösterme
             st.success(f"Tahmini Sonuç: {result}")
             st.write("Detaylar:")
             st.dataframe(input_data.T.style.highlight_max(axis=0))
-            
+
         except Exception as e:
             st.error(f"Hata oluştu: {str(e)}")
