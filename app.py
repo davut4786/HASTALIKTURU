@@ -114,8 +114,6 @@ if st.button("Tahmin Et", type="primary"):
 
             # Tahmin sonucunu gösterme
             st.success(f"Tahmini Sonuç: {result}")
-            st.write("Detaylar:")
-            st.dataframe(input_data.T.style.highlight_max(axis=0))
 
         except Exception as e:
             st.error(f"Hata oluştu: {str(e)}")
